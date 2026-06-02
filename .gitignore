@@ -1,0 +1,50 @@
+# Data files (large CSV, etc.)
+*.csv
+*.txt
+*.log
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+*.ipynb
+.ipynb_checkpoints/
+
+# macOS
+*.DS_Store
+
+# Environment
+.env
+.env.local
+
+# Coverage
+.coverage
+.coverage.*
+
+# Cache
+.cache/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Model files (large binary files)
+*.pth
+*.pt
+*.pkl
+*.h5
+*.hdf5
+*.ckpt
+checkpoints/
+
+# Data directories
+data/
+datasets/
