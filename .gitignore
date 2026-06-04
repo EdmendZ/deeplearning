@@ -14,7 +14,7 @@ dist/
 build/
 
 # Jupyter Notebook
-*.ipynb
+
 .ipynb_checkpoints/
 
 # macOS
