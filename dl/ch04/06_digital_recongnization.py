@@ -34,7 +34,7 @@ acc_count = torch.sum(y_pred_class == test_y)
 acc = acc_count.item() / len(test_y)
 print(acc)
 
-print(model(test_x[33:34]), test_y[33:34])
+print(model(test_x[20:21]), test_y[20:21])
 
 c = 0
 for i in y_pred_class == test_y:

@@ -18,3 +18,5 @@ def get_data():
     x_test = preprocessor.transform(x_test)
 
     return x_train, x_test, y_train.values, y_test.values
+
+

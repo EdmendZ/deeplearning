@@ -1,3 +1,9 @@
+"""自适应学习率优化器（AdaGrad）演示：对比普通 SGD 与 AdaGrad 的优化轨迹。
+
+AdaGrad 会为每个参数累积历史梯度平方和，并据此自适应地缩放学习率：
+梯度大的方向学习率自动变小，梯度小的方向学习率相对较大，从而更适应各向异性的损失面。
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,6 +16,7 @@ def f(w):
     return (w ** 2).dot(torch.tensor([0.05, 1]))
 
 
+# 执行梯度下降，记录参数轨迹
 def desc(w, optimizer, iter_num):
     w0_list = []
     w1_list = []
@@ -38,19 +45,28 @@ if __name__ == '__main__':
     iter_num = 1000
 
     # 定义优化器
-    ## sgd
+    ## sgd（作为对照基线）
     w_clone = w.clone().requires_grad_(True)
     sgd_optimizer = optim.SGD([w_clone], lr=lr)
     w0_list, w1_list = desc(w_clone, sgd_optimizer, iter_num)
     print(w0_list, w1_list)
     plt.plot(w0_list, w1_list, label="SGD")
 
-    ## adagrad
+    ## adagrad（自适应学习率，按各参数历史梯度平方和缩放步长）
     w_clone = w.clone().requires_grad_(True)
     sgd_optimizer = optim.Adagrad([w_clone], lr=lr)
     w0_list, w1_list = desc(w_clone, sgd_optimizer, iter_num)
 
     plt.plot(w0_list, w1_list, label="Adagrad", color="red")
+
+    # 绘制等高线
+    ## 生成网格采样点
+    w0_grid, w1_grid = np.meshgrid(np.linspace(-7, 7, 100), np.linspace(-2, 2, 100))
+    y_grid = 0.05 * w0_grid ** 2 + w1_grid ** 2  # 计算y
+    plt.contour(w0_grid, w1_grid, y_grid, levels=30, colors='gray')  # levels 等高线的数量
+
+    plt.legend()
+    plt.show()
 
     # 绘制等高线
     ## 生成网格采样点

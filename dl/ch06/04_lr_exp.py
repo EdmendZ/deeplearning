@@ -1,3 +1,9 @@
+"""学习率调度（ExponentialLR）演示：每一步都将学习率按指数衰减 lr = lr * gamma。
+
+指数衰减是一种平滑的连续衰减策略，学习率随迭代逐步、平稳地减小，
+没有 StepLR / MultiStepLR 那样的阶梯式突变。
+"""
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,6 +17,7 @@ def f(w):
     return (w ** 2).dot(torch.tensor([0.05, 1]))
 
 
+# 执行梯度下降，同时记录参数轨迹和每一步的学习率变化
 def desc(w, optimizer, lr_scheduler, iter_num):
     w0_list = []
     w1_list = []
@@ -20,6 +27,7 @@ def desc(w, optimizer, lr_scheduler, iter_num):
         w0_list.append(w[0].item())
         w1_list.append(w[1].item())
 
+        # 记录当前学习率（从优化器的参数组中读取）
         lr_list.append(optimizer.param_groups[0]["lr"])
 
         # 计算损失
@@ -30,7 +38,7 @@ def desc(w, optimizer, lr_scheduler, iter_num):
         optimizer.step()
         # 梯度清零
         optimizer.zero_grad()
-        # 更新学习率
+        # 更新学习率（按调度器策略调整）
         lr_scheduler.step()
 
     return w0_list, w1_list, lr_list
@@ -48,10 +56,12 @@ if __name__ == '__main__':
     ## sgd
     w_clone = w.clone().requires_grad_(True)
     sgd_optimizer = optim.SGD([w_clone], lr=lr)
+    # ExponentialLR：每一步学习率乘以 gamma（指数级平滑衰减）
     lr_scheduler = ExponentialLR(sgd_optimizer, gamma=0.99)
 
     w0_list, w1_list, lr_list = desc(w_clone, sgd_optimizer, lr_scheduler, iter_num)
 
+    # 左图：参数优化轨迹；右图：学习率变化曲线（呈指数衰减）
     fig, ax = plt.subplots(1, 2, figsize=(10, 5))
     ax[0].plot(w0_list, w1_list, label="SGD")
 
